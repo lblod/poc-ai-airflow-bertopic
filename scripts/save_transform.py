@@ -18,14 +18,13 @@ def save(endpoint):
     
                  DELETE{{
              GRAPH <http://mu.semte.ch/application> {{
-                          <http://data.lblod.info/submissions/017c1a50-94b3-11ec-b711-ebd518564af2> ext:HasTopic ?topic.
-             <http://data.lblod.info/submissions/017c1a50-94b3-11ec-b711-ebd518564af2> ext:score ?score.
+            <{record['thing']}> ext:HasTopic ?topic ; ext:score ?score ; ext:ingestedByMl2GrowSmartRegulationsTopics ?srt . 
              }}
              }}
                          WHERE {{
                GRAPH <http://mu.semte.ch/application> {{
-                 <http://data.lblod.info/submissions/017c1a50-94b3-11ec-b711-ebd518564af2> ext:HasTopic ?topic.
-             <http://data.lblod.info/submissions/017c1a50-94b3-11ec-b711-ebd518564af2> ext:score ?score.
+                 <{record['thing']}> ext:HasTopic ?topic.
+             <{record['thing']}> ext:score ?score.
               }}
              }}
             """
@@ -36,14 +35,13 @@ def save(endpoint):
             PREFIX ext: <http://mu.semte.ch/vocabularies/ext/>
             INSERT {{
             GRAPH <http://mu.semte.ch/application> {{
-            <{record['thing']}> ext:HasTopic <{new_uri}> .
+            <{record['thing']}> ext:HasTopic <{new_uri}> ; ext:ingestedByMl2GrowSmartRegulationsEmbedding "1" .
     
             <{new_uri}> a ext:TopicScore;
             ext:TopicURI <http://data.lblod.info/ML2GrowTopicModeling/topic/{record['topic']}>; 
             ext:score {record['probability']} .
                     }}
             }}
-    
             """
 
             r = requests.post(endpoint, data={"query": q},
