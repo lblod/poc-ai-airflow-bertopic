@@ -18,13 +18,14 @@ def save(endpoint):
     
                  DELETE{{
              GRAPH <http://mu.semte.ch/application> {{
-            <{record['thing']}> ext:HasTopic ?topic ; ext:score ?score ; ext:ingestedByMl2GrowSmartRegulationsTopics ?srt . 
+            <{record['thing']}> ext:HasTopic ?topic_link ; ext:ingestedByMl2GrowSmartRegulationsTopics ?srt . 
+            ?topic_link ext:TopicURI ?topic_uri ; ext:score ?topic_score .
              }}
              }}
                          WHERE {{
                GRAPH <http://mu.semte.ch/application> {{
-                 <{record['thing']}> ext:HasTopic ?topic.
-             <{record['thing']}> ext:score ?score.
+                <{record['thing']}> ext:HasTopic ?topic_link ; ext:ingestedByMl2GrowSmartRegulationsTopics ?srt . 
+                ?topic_link ext:TopicURI ?topic_uri ; ext:score ?topic_score .
               }}
              }}
             """
