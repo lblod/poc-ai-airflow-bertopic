@@ -15,6 +15,10 @@ def save(endpoint: str):
     :return:
     """
     records = read_json(file_name="BERTopic_output.json")
+
+    if not records:
+        return None
+
     for record in tqdm(records):
         try:
             new_uri = f"http://data.lblod.info/ML2GrowTopicModeling/{str(uuid.uuid4())}"

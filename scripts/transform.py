@@ -14,6 +14,10 @@ def main():
     :return:
     """
     records = read_json(file_name="sparql_input.json")
+
+    if not records:
+        return None
+
     topics, probs = topic_model.transform([r["text"][:10_000] for r in records])
 
     df = pd.DataFrame(records)
