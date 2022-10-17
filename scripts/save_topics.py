@@ -1,10 +1,16 @@
 import fire
-import requests
 from bertopic import BERTopic
 from tqdm import tqdm
 
+from util import make_request
+
 
 def get_clear_queries(topic_model):
+    """
+    Function that creates the required queries to clear out the space needed to save new topics
+    :param topic_model: the actual topic model itself
+    :return: a list with clear queries
+    """
     topic_dict = {}
     for topic, count, name in topic_model.get_topic_info().itertuples(name=None, index=False):
         topic_dict = {
@@ -54,6 +60,13 @@ def get_clear_queries(topic_model):
 
 
 def get_insert_queries(topic_model):
+    """
+    This function generates a list of insert queries to define the new topic model in the sparql environment.
+
+    :param topic_model: the actual topic model
+    :return:
+    """
+
     topic_dict = {}
     for topic, count, name in topic_model.get_topic_info().itertuples(name=None, index=False):
         topic_dict = {
@@ -96,33 +109,31 @@ def get_insert_queries(topic_model):
     return sparql_obj
 
 
-def save(endpoint):
+def save(endpoint: str):
+    """
+    Function that prepares and saves the topics to sparql.
+
+    :param endpoint: sparql endpoint url
+    :return:
+    """
+
+    # Load the topic model to extract the topic information from
     topic_model = BERTopic.load("/models/topic.model")
 
+    # Loop for deleteing --> can prob be optimized in one query
     for q in tqdm(get_clear_queries(topic_model)):
         try:
-
-            r = requests.post(
-                endpoint,
-                data={"query": q},
-                headers={"Accept": "application/sparql-results+json,*/*;q=0.9"}
-            )
+            make_request(endpoint=endpoint, query=q)
 
         except Exception as ex:
-            print(r.text)
             print(ex)
 
+    # Loop for inserting --> can prob be optimized in one query
     for q in tqdm(get_insert_queries(topic_model)):
         try:
-
-            r = requests.post(
-                endpoint,
-                data={"query": q},
-                headers={"Accept": "application/sparql-results+json,*/*;q=0.9"}
-            )
+            make_request(endpoint=endpoint, query=q)
 
         except Exception as ex:
-            print(r.text)
             print(ex)
 
 
