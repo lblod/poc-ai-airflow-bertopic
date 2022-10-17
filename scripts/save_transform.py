@@ -15,6 +15,10 @@ def save(endpoint: str):
     :return:
     """
     records = read_json(file_name="BERTopic_output.json")
+
+    if not records:
+        return None
+
     for record in tqdm(records):
         try:
             new_uri = f"http://data.lblod.info/ML2GrowTopicModeling/{str(uuid.uuid4())}"
@@ -43,7 +47,7 @@ def save(endpoint: str):
             PREFIX ext: <http://mu.semte.ch/vocabularies/ext/>
             INSERT {{
             GRAPH <http://mu.semte.ch/application> {{
-            <{record['thing']}> ext:HasTopic <{new_uri}> ; ext:ingestedByMl2GrowSmartRegulationsEmbedding "1" .
+            <{record['thing']}> ext:HasTopic <{new_uri}> ; ext:ingestedByMl2GrowSmartRegulationsTopics "1" .
     
             <{new_uri}> a ext:TopicScore;
             ext:TopicURI <http://data.lblod.info/ML2GrowTopicModeling/topic/{record['topic']}>; 

@@ -1,6 +1,6 @@
 import torch
 from bertopic import BERTopic
-from sentence_transformers import SentenceTransformer
+from transformers import AutoModel
 
 seed = 1
 import random
@@ -35,7 +35,7 @@ class BERTopicHelper:
         :param min_topic_size:
         :param from_scratch:
         """
-        embed_model = SentenceTransformer(embedding_model_path)
+        embed_model = AutoModel.from_pretrained(embedding_model_path)
         self.model_path = topic_model_path
 
         if from_scratch:
