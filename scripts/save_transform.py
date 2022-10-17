@@ -1,13 +1,19 @@
 import uuid
 
 import fire
-import requests
 from tqdm import tqdm
 
 from gcs import read_json
+from util import make_request
 
 
-def save(endpoint):
+def save(endpoint: str):
+    """
+    Function that takes transformed output from bertopic and writes it to sparql
+
+    :param endpoint: the url to the sparql endpoint
+    :return:
+    """
     records = read_json(file_name="BERTopic_output.json")
     for record in tqdm(records):
         try:
@@ -29,8 +35,9 @@ def save(endpoint):
               }}
              }}
             """
-            r = requests.post(endpoint, data={"query": q},
-                              headers={"Accept": "application/sparql-results+json,*/*;q=0.9"})
+
+            # request for delete statement
+            make_request(endpoint=endpoint, query=q)
 
             q = f"""
             PREFIX ext: <http://mu.semte.ch/vocabularies/ext/>
@@ -44,12 +51,11 @@ def save(endpoint):
                     }}
             }}
             """
+            # request for insert statement
+            make_request(endpoint=endpoint, query=q)
 
-            r = requests.post(endpoint, data={"query": q},
-                              headers={"Accept": "application/sparql-results+json,*/*;q=0.9"})
         except Exception as ex:
             print(ex)
-            print(r.text)
 
 
 if __name__ == "__main__":
