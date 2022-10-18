@@ -14,5 +14,4 @@ def make_request(endpoint: str, query: str, headers: dict = {"Accept": "applicat
 
     if r.status_code != 200:
         print(f"[FAILURE] {50 * '-'} /n {query} /n {50 * '-'}")
-
-    raise Exception(f"Failed to upload data for query : {query} with error {r.text}")
+        raise Exception(f"Failed to upload data for query : {query} with error {r.text}")

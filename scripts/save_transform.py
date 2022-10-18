@@ -42,7 +42,10 @@ def save(endpoint: str):
 
             # request for delete statement
             make_request(endpoint=endpoint, query=q)
+        except Exception as ex:
+            print(ex)
 
+        try:
             q = f"""
             PREFIX ext: <http://mu.semte.ch/vocabularies/ext/>
             INSERT {{
