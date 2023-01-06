@@ -10,7 +10,6 @@ def make_request(endpoint: str, query: str, headers: dict = {"Accept": "applicat
     :return:
     """
     r = requests.post(endpoint, data={"query": query}, headers=headers)
-    print(r.status_code)
 
     if r.status_code != 200:
         print(f"[FAILURE] {50 * '-'} /n {query} /n {50 * '-'}")
